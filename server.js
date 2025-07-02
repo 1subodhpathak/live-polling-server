@@ -9,7 +9,14 @@ const Poll = require('./models/Poll');
 const User = require('./models/User');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://live-polling-main-7z91.vercel.app'
+  ],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -22,10 +29,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vaarssp51:y7nkD5ddIFE
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173", // Vite's default port
-    methods: ["GET", "POST"]
-  }
+  // cors: {
+  //   origin: "http://localhost:5173", 
+  //   methods: ["GET", "POST"]
+  // }
 });
 
 // Store active polls and connected users
@@ -327,6 +334,11 @@ io.on('connection', (socket) => {
     connectedUsers.delete(socket.id);
     console.log('User disconnected:', socket.id);
   });
+});
+
+// Health check route
+app.get('/', (req, res) => {
+  res.send('Live Polling backend is running!');
 });
 
 const PORT = process.env.PORT || 3000;
