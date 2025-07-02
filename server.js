@@ -29,10 +29,13 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vaarssp51:y7nkD5ddIFE
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  // cors: {
-  //   origin: "http://localhost:5173", 
-  //   methods: ["GET", "POST"]
-  // }
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "https://live-polling-main-7z91.vercel.app"
+    ],
+    methods: ["GET", "POST"]
+  }
 });
 
 // Store active polls and connected users
